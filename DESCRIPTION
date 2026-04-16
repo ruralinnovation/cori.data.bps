@@ -1,0 +1,32 @@
+Package: cori.data.bps
+Type: Package
+Title: Access and Analyze U.S. Census Bureau Building Permits Survey Data
+Version: 0.1.0
+Authors@R: person("Drew", "Rosebush", email = "drew.rosebush@ruralinnovation.us", role = c("aut", "cre"))
+Description: Access and analyze U.S. Census Bureau Building Permits Survey (BPS)
+    data covering new residential units authorized from 2000 to present. Provides
+    tools to read source data from the Census Bureau, write raw and processed data
+    to S3, and query processed data from S3 via DuckDB.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+    DBI,
+    dplyr,
+    duckdb,
+    stringr,
+    utils
+Remotes:
+    ruralinnovation/cori.db,
+    ruralinnovation/cori.data.pep
+Suggests:
+    cori.db,
+    cori.data.pep,
+    cori.charts,
+    ruraldefinitions,
+    ggplot2,
+    knitr,
+    rmarkdown,
+    scales
+RoxygenNote: 7.3.3
+VignetteBuilder: knitr
