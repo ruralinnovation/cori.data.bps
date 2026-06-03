@@ -22,18 +22,17 @@ annual files used by this package follow the pattern:
 - County: `https://www2.census.gov/econ/bps/County/co{YYYY}a.txt`
 - State: `https://www2.census.gov/econ/bps/State/st{YYYY}a.txt`
 
-**2025 annual data releases May 14, 2026.**
-
 ## Vintage Log
 
 | Vintage | Data covers | Captured | By | S3 path |
 |---|---|---|---|---|
+| 2025 | 2000–2025 | 2026-06-03 | Drew | `s3://cori.data.bps/data_processed/vintage_2025/` |
 | 2024 | 2000–2024 | 2026-04-16 | Drew | `s3://cori.data.bps/data_processed/vintage_2024/` |
 
 ## Next Capture
 
 | Field | Detail |
 |---|---|
-| **Expected release** | May 14, 2026 (2025 annual data) |
+| **Expected release** | May 2027 (2026 annual data) |
 | **Responsible** | Drew Rosebush |
-| **Notes** | Run `write_bps_to_s3(years = 2000:2025)` after release |
+| **Notes** | Run `write_bps_to_s3(years = 2000:2026)` after release |
