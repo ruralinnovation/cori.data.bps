@@ -18,7 +18,8 @@ Imports:
     utils
 Remotes:
     ruralinnovation/cori.db,
-    ruralinnovation/cori.data.pep
+    ruralinnovation/cori.data.pep,
+    ruralinnovation/ruraldefinitions
 Suggests:
     cori.db,
     cori.data.pep,
