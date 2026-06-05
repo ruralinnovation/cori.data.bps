@@ -47,7 +47,8 @@ read_bps_raw <- function(year) {
     dplyr::select(
       geoid, year,
       single_family_units, units_2_family, units_3_to_4_family, units_5_plus_family
-    )
+    ) |>
+    dplyr::distinct()
 
   # --- State ---
   state_url <- sprintf(
