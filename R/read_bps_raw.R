@@ -11,7 +11,6 @@
 #'   \code{units_3_to_4_family}, \code{units_5_plus_family}.
 #'
 #' @keywords internal
-#' @export
 read_bps_raw <- function(year) {
 
   old_timeout <- getOption("timeout")

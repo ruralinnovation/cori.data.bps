@@ -23,7 +23,6 @@
 #' @return Invisibly, a list with \code{vintage} and \code{n_rows}.
 #'
 #' @keywords internal
-#' @export
 write_bps_to_s3 <- function(
     years          = 2000:as.integer(format(Sys.Date(), "%Y")),
     s3_bucket      = "cori.data.bps",
@@ -77,8 +76,8 @@ write_bps_to_s3 <- function(
   message(sprintf("Raw data written locally: %s rows", format(nrow(raw), big.mark = ",")))
 
   # --- Processed data ---
-  message("Computing units_per_1k_people...")
-  processed   <- .compute_units_per_1k(raw, pop_df)
+  message("Computing building_permits and units_per_1k_people...")
+  processed   <- .compute_bps_variables(raw, pop_df)
   vintage     <- as.character(max(processed$year, na.rm = TRUE))
   vintage_tag <- sprintf("vintage_%s", vintage)
 

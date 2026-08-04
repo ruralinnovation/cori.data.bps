@@ -1,13 +1,19 @@
-# Internal: compute units_per_1k from a pre-loaded raw df and pop df.
+# Internal: compute building_permits and units_per_1k from a pre-loaded raw df and pop df.
 # raw_df: output of read_bps_raw() bound across years
 # pop_df: data frame with columns geoid, year, pop
-.compute_units_per_1k <- function(raw_df, pop_df) {
-  raw_df |>
+.compute_bps_variables <- function(raw_df, pop_df) {
+  totals <- raw_df |>
     dplyr::mutate(
       total_units = single_family_units + units_2_family +
                     units_3_to_4_family + units_5_plus_family
     ) |>
-    dplyr::select(geoid, year, total_units) |>
+    dplyr::select(geoid, year, total_units)
+
+  permits <- totals |>
+    dplyr::mutate(variable = "building_permits", value = as.numeric(total_units), agg_var = NA_real_) |>
+    dplyr::select(geoid, year, variable, value, agg_var)
+
+  per_1k <- totals |>
     dplyr::left_join(pop_df, by = c("geoid", "year")) |>
     dplyr::mutate(
       agg_var  = pop / 1000,
@@ -17,25 +23,25 @@
       variable = "units_per_1k_people"
     ) |>
     dplyr::select(geoid, year, variable, value, agg_var)
+
+  dplyr::bind_rows(permits, per_1k)
 }
 
 
-#' Pull units per 1,000 population
+#' Pull BPS processed variables
 #'
 #' Reads raw BPS data from the Census Bureau for the requested years,
-#' joins with a population data frame, and returns the five-column tidy format.
+#' joins with a population data frame, and returns the five-column tidy format
+#' for both `building_permits` and `units_per_1k_people`.
 #'
 #' @param years Integer vector. Years to pull.
 #' @param pop_df Data frame with columns \code{geoid}, \code{year}, \code{pop}.
-#'   Obtain from \code{cori.data.pep::read_pep_from_s3(variables = "population")},
-#'   then rename \code{value} to \code{pop} and drop \code{variable}/\code{agg_var}.
 #'
 #' @return A data frame: \code{geoid}, \code{year}, \code{variable},
 #'   \code{value}, \code{agg_var}.
 #'
 #' @keywords internal
-#' @export
 pull_units_per_1k <- function(years, pop_df) {
   raw <- dplyr::bind_rows(lapply(years, read_bps_raw))
-  .compute_units_per_1k(raw, pop_df)
+  .compute_bps_variables(raw, pop_df)
 }
