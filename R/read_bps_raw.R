@@ -22,8 +22,12 @@ read_bps_raw <- function(year) {
     "https://www2.census.gov/econ/bps/County/co%da.txt", year
   )
   message(sprintf("Reading BPS county data: %d...", year))
-  county_raw <- utils::read.delim(
-    url(county_url), header = TRUE, sep = ",", row.names = NULL, skip = 1
+  county_raw <- tryCatch(
+    utils::read.delim(url(county_url), header = TRUE, sep = ",", row.names = NULL, skip = 1),
+    error = function(e) stop(sprintf(
+      "BPS county data for %d is not yet available from the Census Bureau.\n  URL: %s\n  Check https://www.census.gov/construction/bps/ for the latest release.",
+      year, county_url
+    ), call. = FALSE)
   )
 
   county <- county_raw |>
@@ -54,8 +58,12 @@ read_bps_raw <- function(year) {
     "https://www2.census.gov/econ/bps/State/st%da.txt", year
   )
   message(sprintf("Reading BPS state data: %d...", year))
-  state_raw <- utils::read.delim(
-    url(state_url), header = TRUE, sep = ",", row.names = NULL, skip = 1
+  state_raw <- tryCatch(
+    utils::read.delim(url(state_url), header = TRUE, sep = ",", row.names = NULL, skip = 1),
+    error = function(e) stop(sprintf(
+      "BPS state data for %d is not yet available from the Census Bureau.\n  URL: %s\n  Check https://www.census.gov/construction/bps/ for the latest release.",
+      year, state_url
+    ), call. = FALSE)
   )
 
   state <- state_raw |>

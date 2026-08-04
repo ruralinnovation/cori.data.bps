@@ -1,3 +1,24 @@
+# Internal: probe Census Bureau to find the latest year with available BPS data.
+.probe_latest_bps_year <- function() {
+  year <- as.integer(format(Sys.Date(), "%Y"))
+  repeat {
+    url <- sprintf("https://www2.census.gov/econ/bps/County/co%da.txt", year)
+    status <- tryCatch(
+      {
+        con <- url(url)
+        open(con, "r")
+        close(con)
+        200L
+      },
+      error = function(e) 404L
+    )
+    if (status == 200L) return(year)
+    year <- year - 1L
+    if (year < 2000L) stop("Could not find any available BPS data year.", call. = FALSE)
+  }
+}
+
+
 # Internal: compute building_permits and units_per_1k from a pre-loaded raw df and pop df.
 # raw_df: output of read_bps_raw() bound across years
 # pop_df: data frame with columns geoid, year, pop

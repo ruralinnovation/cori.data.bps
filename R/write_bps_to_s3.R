@@ -24,7 +24,7 @@
 #'
 #' @keywords internal
 write_bps_to_s3 <- function(
-    years          = 2000:as.integer(format(Sys.Date(), "%Y")),
+    years          = 2000:.probe_latest_bps_year(),
     s3_bucket      = "cori.data.bps",
     s3_path_prefix = "",
     overwrite      = FALSE,

@@ -30,7 +30,7 @@
 #'
 #' @export
 get_building_permits <- function(
-    geography = c("all", "county", "state", "nation"),
+    geography = c("county", "state", "nation"),
     years     = NULL,
     geoids    = NULL,
     variables = NULL,
@@ -95,7 +95,7 @@ get_building_permits <- function(
     county = "county",
     state  = "state",
     nation = "national",
-    "all geographies"
+    "county"
   )
 
   message(sprintf(
