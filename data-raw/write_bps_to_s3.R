@@ -1,28 +1,7 @@
-#' Write raw and processed BPS data to S3
-#'
-#' Reads Building Permits Survey data from the Census Bureau for all requested
-#' years, writes the raw wide-format data to \code{s3://cori.data.bps/data_raw/},
-#' then computes \code{units_per_1k_people} using population from
-#' \code{cori.data.pep} and writes vintage-tagged processed parquet files to
-#' \code{s3://cori.data.bps/data_processed/}.
-#'
-#' Requires the \code{cori.data.pep} package and AWS credentials in the
-#' environment (via \code{AWS_ACCESS_KEY_ID}/\code{AWS_SECRET_ACCESS_KEY} or
-#' an AWS config profile).
-#'
-#' @param years Integer vector. Years to include.
-#'   Default: \code{2000} to current year.
-#' @param s3_bucket Character. S3 bucket name. Default: \code{"cori.data.bps"}.
-#' @param s3_path_prefix Character. Optional prefix for all S3 keys, e.g.
-#'   \code{"test/"} during development. Default: \code{""}.
-#' @param overwrite Logical. If \code{TRUE}, delete the existing S3 prefix
-#'   before uploading. Default: \code{FALSE}.
-#' @param sync_to_s3 Logical. Upload to S3. Set \code{FALSE} to write locally
-#'   only. Default: \code{TRUE}.
-#'
-#' @return Invisibly, a list with \code{vintage} and \code{n_rows}.
-#'
-#' @keywords internal
+# Run devtools::load_all() before executing this script.
+# Loads processing helpers: .probe_latest_bps_year(), read_bps_raw(), .compute_bps_variables()
+devtools::load_all()
+
 write_bps_to_s3 <- function(
     years          = 2000:.probe_latest_bps_year(),
     s3_bucket      = "cori.data.bps",
@@ -127,7 +106,6 @@ write_bps_to_s3 <- function(
 
 
 # Internal: upload a directory or single file to S3 via AWS CLI.
-# Uses aws s3 sync for directories — avoids cori.db overwrite guard.
 .upload_to_s3 <- function(s3_bucket, s3_prefix, local_path) {
   s3_uri <- sprintf("s3://%s/%s", s3_bucket, s3_prefix)
   message(sprintf("Uploading to %s...", s3_uri))
