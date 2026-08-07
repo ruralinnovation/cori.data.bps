@@ -128,7 +128,7 @@ write_bps_to_s3 <- function(
 
 
 # Internal: upload a directory or single file to S3 via AWS CLI.
-# Uses aws s3 sync for directories — avoids cori.db overwrite guard.
+# Uses aws s3 sync for directories — avoids cori.data's put_s3_object overwrite guard.
 .upload_to_s3 <- function(s3_bucket, s3_prefix, local_path) {
   s3_uri <- sprintf("s3://%s/%s", s3_bucket, s3_prefix)
   message(sprintf("Uploading to %s...", s3_uri))

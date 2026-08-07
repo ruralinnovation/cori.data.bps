@@ -68,19 +68,9 @@ read_bps_from_s3 <- function(
     if (!startsWith(vintage, "vintage_")) sprintf("vintage_%s", vintage) else vintage
   }
 
-  con <- DBI::dbConnect(duckdb::duckdb())
+  con <- cori.data.s3::connect_to_s3(s3_bucket)
   on.exit(DBI::dbDisconnect(con, shutdown = TRUE), add = TRUE)
-
-  DBI::dbExecute(con, "INSTALL httpfs; LOAD httpfs;")
-  DBI::dbExecute(con, "INSTALL aws;   LOAD aws;")
   DBI::dbExecute(con, sprintf("SET temp_directory = '%s';", tempdir()))
-  DBI::dbExecute(con, "CREATE OR REPLACE SECRET s3_secret (
-    TYPE S3,
-    PROVIDER CREDENTIAL_CHAIN,
-    CHAIN 'env;config',
-    REGION 'us-east-1',
-    URL_STYLE 'path'
-  );")
 
   glob <- sprintf(
     "s3://%s/%sdata_processed/%s/**/*.parquet",
