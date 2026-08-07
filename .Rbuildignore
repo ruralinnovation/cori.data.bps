@@ -4,3 +4,4 @@
 ^\.Rbuildignore$
 ^\.git$
 ^data-raw$
+^docs$

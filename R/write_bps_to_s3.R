@@ -1,7 +1,3 @@
-# Run devtools::load_all() before executing this script.
-# Loads processing helpers: .probe_latest_bps_year(), read_bps_raw(), .compute_bps_variables()
-devtools::load_all()
-
 write_bps_to_s3 <- function(
     years          = 2000:.probe_latest_bps_year(),
     s3_bucket      = "cori.data.bps",
