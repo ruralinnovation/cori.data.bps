@@ -27,7 +27,7 @@ Suggests:
     ruraldefinitions,
     ggplot2,
     knitr,
-    rmarkdown,
+    markdown,
     scales
 RoxygenNote: 7.3.3
 VignetteBuilder: knitr

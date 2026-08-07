@@ -2,16 +2,14 @@
 % Please edit documentation in R/process_bps.R
 \name{pull_units_per_1k}
 \alias{pull_units_per_1k}
-\title{Pull units per 1,000 population}
+\title{Pull BPS processed variables}
 \usage{
 pull_units_per_1k(years, pop_df)
 }
 \arguments{
 \item{years}{Integer vector. Years to pull.}
 
-\item{pop_df}{Data frame with columns \code{geoid}, \code{year}, \code{pop}.
-Obtain from \code{cori.data.pep::read_pep_from_s3(variables = "population")},
-then rename \code{value} to \code{pop} and drop \code{variable}/\code{agg_var}.}
+\item{pop_df}{Data frame with columns \code{geoid}, \code{year}, \code{pop}.}
 }
 \value{
 A data frame: \code{geoid}, \code{year}, \code{variable},
@@ -19,6 +17,7 @@ A data frame: \code{geoid}, \code{year}, \code{variable},
 }
 \description{
 Reads raw BPS data from the Census Bureau for the requested years,
-joins with a population data frame, and returns the five-column tidy format.
+joins with a population data frame, and returns the five-column tidy format
+for both `building_permits` and `units_per_1k_people`.
 }
 \keyword{internal}

@@ -14,38 +14,26 @@ read_bps_from_s3(
 )
 }
 \arguments{
-\item{vintage}{Character. Vintage to read, e.g. \code{"2024"}.
-Default: \code{"latest"}.}
+\item{vintage}{Passed to [get_building_permits()].}
 
-\item{variables}{Character vector. Variables to return. Default: all.
-See \code{\link{get_bps_codebook}} for names.}
+\item{variables}{Passed to [get_building_permits()].}
 
-\item{years}{Integer vector. Years to return. Default: all.}
+\item{years}{Passed to [get_building_permits()].}
 
-\item{geoids}{Character vector. FIPS codes to return. Default: all.}
+\item{geoids}{Passed to [get_building_permits()].}
 
-\item{s3_bucket}{Character. S3 bucket name. Default: \code{"cori.data.bps"}.}
+\item{s3_bucket}{Ignored. No longer configurable in the public API.}
 
-\item{s3_path_prefix}{Character. Optional prefix. Default: \code{""}.}
+\item{s3_path_prefix}{Ignored. No longer configurable in the public API.}
 }
 \value{
-A data frame with columns: \code{geoid}, \code{year},
-  \code{variable}, \code{value}, \code{agg_var}.
+A data frame. See [get_building_permits()] for details.
 }
 \description{
-Queries CORI's processed Building Permits Survey parquet files from S3
-using DuckDB. Returns long-format data — one row per geoid/year/variable.
-}
-\examples{
-\dontrun{
-# All data, latest vintage
-df <- read_bps_from_s3()
+`r lifecycle::badge("deprecated")`
 
-# Specific years and geoids
-df <- read_bps_from_s3(years = 2010:2024, geoids = c("33009", "33", "00"))
-}
-
+`read_bps_from_s3()` is deprecated. Use [get_building_permits()] instead.
 }
 \seealso{
-\code{\link{latest_bps_vintage}}, \code{\link{get_bps_codebook}}
+[get_building_permits()]
 }

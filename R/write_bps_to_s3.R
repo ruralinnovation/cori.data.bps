@@ -1,31 +1,5 @@
-#' Write raw and processed BPS data to S3
-#'
-#' Reads Building Permits Survey data from the Census Bureau for all requested
-#' years, writes the raw wide-format data to \code{s3://cori.data.bps/data_raw/},
-#' then computes \code{units_per_1k_people} using population from
-#' \code{cori.data.pep} and writes vintage-tagged processed parquet files to
-#' \code{s3://cori.data.bps/data_processed/}.
-#'
-#' Requires the \code{cori.data.pep} package and AWS credentials in the
-#' environment (via \code{AWS_ACCESS_KEY_ID}/\code{AWS_SECRET_ACCESS_KEY} or
-#' an AWS config profile).
-#'
-#' @param years Integer vector. Years to include.
-#'   Default: \code{2000} to current year.
-#' @param s3_bucket Character. S3 bucket name. Default: \code{"cori.data.bps"}.
-#' @param s3_path_prefix Character. Optional prefix for all S3 keys, e.g.
-#'   \code{"test/"} during development. Default: \code{""}.
-#' @param overwrite Logical. If \code{TRUE}, delete the existing S3 prefix
-#'   before uploading. Default: \code{FALSE}.
-#' @param sync_to_s3 Logical. Upload to S3. Set \code{FALSE} to write locally
-#'   only. Default: \code{TRUE}.
-#'
-#' @return Invisibly, a list with \code{vintage} and \code{n_rows}.
-#'
-#' @keywords internal
-#' @export
 write_bps_to_s3 <- function(
-    years          = 2000:as.integer(format(Sys.Date(), "%Y")),
+    years          = 2000:.probe_latest_bps_year(),
     s3_bucket      = "cori.data.bps",
     s3_path_prefix = "",
     overwrite      = FALSE,
@@ -77,8 +51,8 @@ write_bps_to_s3 <- function(
   message(sprintf("Raw data written locally: %s rows", format(nrow(raw), big.mark = ",")))
 
   # --- Processed data ---
-  message("Computing units_per_1k_people...")
-  processed   <- .compute_units_per_1k(raw, pop_df)
+  message("Computing building_permits and units_per_1k_people...")
+  processed   <- .compute_bps_variables(raw, pop_df)
   vintage     <- as.character(max(processed$year, na.rm = TRUE))
   vintage_tag <- sprintf("vintage_%s", vintage)
 
@@ -128,7 +102,7 @@ write_bps_to_s3 <- function(
 
 
 # Internal: upload a directory or single file to S3 via AWS CLI.
-# Uses aws s3 sync for directories — avoids cori.data's put_s3_object overwrite guard.
+# Uses aws s3 sync for directories — avoids cori.data.s3's put_s3_object overwrite guard.
 .upload_to_s3 <- function(s3_bucket, s3_prefix, local_path) {
   s3_uri <- sprintf("s3://%s/%s", s3_bucket, s3_prefix)
   message(sprintf("Uploading to %s...", s3_uri))

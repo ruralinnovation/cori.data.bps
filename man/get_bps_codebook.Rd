@@ -7,16 +7,18 @@
 get_bps_codebook()
 }
 \value{
-A data frame with columns: \code{variable}, \code{label},
-  \code{unit}, \code{nominal}, \code{notes}.
+A data frame with columns: `variable`, `raw_variable`, `label`,
+  `unit`, `nominal`, `notes`.
+  `raw_variable` is the original name stored in S3 parquet files.
 }
 \description{
-Returns documentation for all variables in the processed BPS output.
+Returns a data frame describing each variable available from
+[get_building_permits()].
 }
 \examples{
 get_bps_codebook()
 
 }
 \seealso{
-\code{\link{read_bps_from_s3}}
+[get_building_permits()]
 }
