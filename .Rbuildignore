@@ -3,3 +3,5 @@
 ^skills$
 ^\.Rbuildignore$
 ^\.git$
+^data-raw$
+^docs$
