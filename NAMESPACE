@@ -3,3 +3,5 @@
 export(get_bps_codebook)
 export(get_building_permits)
 export(read_bps_from_s3)
+import(DBI)
+importFrom(cori.data.s3,connect_to_s3)

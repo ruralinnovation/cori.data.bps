@@ -3,6 +3,9 @@
 #' Queries CORI's processed Building Permits Survey (BPS) parquet files from S3
 #' using DuckDB. Returns long-format data: one row per `geoid / year / variable`.
 #'
+#' @import DBI
+#' @importFrom cori.data.s3 connect_to_s3
+#'
 #' @param geography Character. One of `"all"`, `"county"`, `"state"`, or
 #'   `"nation"`. Filters rows by geography level. Default: `"all"`.
 #' @param years Integer vector. Years to return. Default: all available.
