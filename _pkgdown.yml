@@ -1,0 +1,20 @@
+url: https://ruralinnovation.github.io/cori.data.bps
+
+template:
+  bootstrap: 5
+
+reference:
+- title: Building Permits
+  contents:
+  - get_building_permits
+
+- title: Utilities
+  contents:
+  - get_bps_codebook
+  - read_bps_from_s3
+
+- title: Internal
+  desc: Functions for data processing and maintenance
+  contents:
+  - pull_units_per_1k
+  - read_bps_raw
