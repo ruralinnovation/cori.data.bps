@@ -6,3 +6,4 @@
 ^data-raw$
 ^docs$
 ^\.idea$
+^_pkgdown\.yml$

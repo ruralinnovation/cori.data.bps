@@ -8,6 +8,7 @@ Description: Access and analyze U.S. Census Bureau Building Permits Survey (BPS)
     tools to read source data from the Census Bureau, write raw and processed data
     to S3, and query processed data from S3 via DuckDB.
 License: MIT + file LICENSE
+URL: https://ruralinnovation.github.io/cori.data.bps
 Encoding: UTF-8
 LazyData: true
 Imports:
