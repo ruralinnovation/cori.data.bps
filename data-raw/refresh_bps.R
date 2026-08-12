@@ -7,7 +7,7 @@
 # Run devtools::load_all() before executing this script.
 devtools::load_all()
 
-latest_year = 2025
+latest_year <- 2025
 
 ### check vintage
 s3_vintageyr <- as.numeric(substr(latest_bps_vintage(), 9, 12))

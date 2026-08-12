@@ -12,12 +12,14 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     cori.data.pep,
+    cori.data.s3,
     DBI,
     dplyr,
     duckdb,
     stringr,
     utils
 Remotes:
+    ruralinnovation/cori.data.s3,
     ruralinnovation/cori.data.pep,
     ruralinnovation/ruraldefinitions
 Suggests:
