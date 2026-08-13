@@ -21,8 +21,8 @@ Imports:
     utils
 Remotes:
     ruralinnovation/cori.charts,
-    ruralinnovation/cori.data.s3,
     ruralinnovation/cori.data.pep,
+    ruralinnovation/cori.data.s3,
     ruralinnovation/ruraldefinitions
 Suggests:
     cori.charts,
