@@ -1,0 +1,181 @@
+# cori.data.bps
+
+Access and analyze U.S. Census Bureau Building Permits Survey (BPS) data
+covering new residential units authorized from 2000 to present.
+
+## Installation
+
+``` r
+
+devtools::install_github("ruralinnovation/cori.data.bps")
+```
+
+### Requirements
+
+**Census API Key** (required): Get one at
+[http://api.census.gov/data/key_signup.html](http://api.census.gov/data/key_signup.md)
+
+``` r
+
+Sys.setenv(CENSUS_API_KEY = "your_api_key_here")
+```
+
+**S3 access** (for `read_bds_from_s3()` and upload): Install
+`cori.data.s3`. Reads fall back to CORI’s credential-vending endpoint if
+no local AWS credentials are configured.
+
+``` r
+
+remotes::install_github("ruralinnovation/cori.data.s3")
+```
+
+## Quick Start
+
+``` r
+
+library(cori.data.bps)
+
+# See available variables
+get_bps_codebook()
+
+# Get county-level building permits
+df <- get_building_permits(geography = "county")
+
+# Get state-level data for specific years
+state_df <- get_building_permits(geography = "state", years = 2010:2024)
+```
+
+All data is returned in tidy (long) format with one row per
+`geoid x year x variable` combination.
+
+## Core Function
+
+### get_building_permits()
+
+``` r
+
+# Returns: geoid | year | variable | value | agg_var
+get_building_permits(
+  geography = "county",
+  years     = NULL,
+  geoids    = NULL,
+  variables = NULL,
+  vintage   = "latest"
+)
+```
+
+| Parameter   | Description                                                |
+|-------------|------------------------------------------------------------|
+| `geography` | One of `"county"`, `"state"`, or `"nation"`                |
+| `years`     | Integer vector of years to return (default: all available) |
+| `geoids`    | FIPS codes to return (overrides `geography` when supplied) |
+| `variables` | Variables to return (default: all)                         |
+| `vintage`   | Data vintage, e.g. `"2024"` (default: `"latest"`)          |
+
+## Variables
+
+| Variable | Description | Unit |
+|----|----|----|
+| `building_permits` | New residential units authorized | units |
+| `units_per_1k_people` | Units authorized per 1,000 population | units per 1,000 persons |
+
+The `agg_var` column contains `population / 1,000`, suitable for
+population-weighted averaging of rates.
+
+Use
+[`get_bps_codebook()`](https://ruralinnovation.github.io/cori.data.bps/reference/get_bps_codebook.md)
+for complete variable documentation.
+
+## Filtering and Selection
+
+### Filter by Geography
+
+``` r
+
+# Specific counties by FIPS
+nh_counties <- get_building_permits(
+  geoids = c("33009", "33011", "33013"),
+  years  = 2010:2024
+)
+
+# Compare county, state, and national
+grafton <- get_building_permits(
+  geoids = c("33009", "33", "00")
+)
+```
+
+### Select Specific Variables
+
+``` r
+
+# Rate variable only
+rates <- get_building_permits(
+  geography = "county",
+  variables = "units_per_1k_people",
+  years     = 2015:2024
+)
+```
+
+## Common Use Cases
+
+### Population-Weighted Averages
+
+The `agg_var` column enables correct population-weighted averaging:
+
+``` r
+
+library(dplyr)
+
+df <- get_building_permits(geography = "county")
+
+# Population-weighted average rate across all counties
+df |>
+  filter(variable == "units_per_1k_people") |>
+  group_by(year) |>
+  summarise(
+    weighted_avg = sum(value * agg_var, na.rm = TRUE) / sum(agg_var, na.rm = TRUE)
+  )
+```
+
+### Rural vs. Nonrural Comparison
+
+``` r
+
+library(dplyr)
+library(ruraldefinitions)
+
+df <- get_building_permits(geography = "county")
+
+rural_avg <- df |>
+  filter(variable == "units_per_1k_people") |>
+  left_join(select(cbsa_2023, geoid, is_rural), by = "geoid") |>
+  group_by(year, is_rural) |>
+  summarise(
+    value = sum(value * agg_var, na.rm = TRUE) / sum(agg_var, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+## Data Details
+
+**Source:** U.S. Census Bureau, Building Permits Survey
+
+**Coverage:** 2000-present, updated annually (release typically May)
+
+**Geography:**
+
+| Level    | FIPS Format | Example                        |
+|----------|-------------|--------------------------------|
+| County   | 5-digit     | `"33009"` (Grafton County, NH) |
+| State    | 2-digit     | `"33"` (New Hampshire)         |
+| National | `"00"`      | United States total            |
+
+**Structure types:** Total includes single-family, 2-family,
+3-to-4-family, and 5-plus-family units.
+
+## Resources
+
+- [Census Building Permits
+  Survey](https://www.census.gov/construction/bps/)
+- [BPS
+  Methodology](https://www.census.gov/construction/bps/methodology.html)
