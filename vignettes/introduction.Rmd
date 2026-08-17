@@ -19,8 +19,7 @@ knitr::opts_chunk$set(
 ```
 
 `cori.data.bps` provides annual building permit data from the U.S. Census
-Bureau's Building Permits Survey (BPS), processed and stored in CORI's S3
-data lake. Data cover 2000--present and measure new residential units
+Bureau's Building Permits Survey (BPS). Data cover 2000--present and measure new residential units
 authorized by building permits across all structure types.
 
 **Source:** U.S. Census Bureau, Building Permits Survey
@@ -34,7 +33,13 @@ library(cori.data.bps)
 
 get_bps_codebook() |>
   dplyr::select(variable, label, unit, notes) |>
-  knitr::kable()
+  gt::gt() |>
+  gt::cols_label(
+    variable = "Variable",
+    label    = "Label",
+    unit     = "Unit",
+    notes    = "Notes"
+  )
 ```
 
 ## Reading data
@@ -63,7 +68,7 @@ dplyr::glimpse(nh_bps)
 ## Rural vs. Nonrural
 
 Housing permit activity diverges between rural and nonrural counties. The chart
-below shows population-weighted average units permitted per 1,000 population by
+below shows population-weighted average units permitted per 1,000 people by
 rural status using the CBSA 2023 rural definition.
 
 ```{r rural-nonrural}
@@ -144,7 +149,7 @@ ggplot(grafton, aes(x = year, y = value, color = group, linetype = group, linewi
   theme_cori() +
   theme(legend.position = "bottom") +
   labs(
-    title    = "New residential units authorized per 1,000 residents \u2014 Grafton County, NH",
+    title    = "Grafton County, NH\nNew residential units authorized per 1,000 residents",
     subtitle = "Compared to New Hampshire and the United States, 2000\u20132024",
     x        = NULL,
     y        = NULL,
