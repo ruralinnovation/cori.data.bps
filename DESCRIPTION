@@ -26,6 +26,7 @@ Remotes:
     ruralinnovation/ruraldefinitions
 Suggests:
     cori.charts,
+    gt,
     ruraldefinitions,
     ggplot2,
     knitr,
