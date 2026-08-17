@@ -1,9 +1,9 @@
 # Introduction to cori.data.bps
 
 `cori.data.bps` provides annual building permit data from the U.S.
-Census Bureau’s Building Permits Survey (BPS), processed and stored in
-CORI’s S3 data lake. Data cover 2000–present and measure new residential
-units authorized by building permits across all structure types.
+Census Bureau’s Building Permits Survey (BPS). Data cover 2000–present
+and measure new residential units authorized by building permits across
+all structure types.
 
 **Source:** U.S. Census Bureau, Building Permits Survey **Coverage:**
 2000–present, updated annually (release typically May) **Geography:**
@@ -17,13 +17,19 @@ library(cori.data.bps)
 
 get_bps_codebook() |>
   dplyr::select(variable, label, unit, notes) |>
-  knitr::kable()
+  gt::gt() |>
+  gt::cols_label(
+    variable = "Variable",
+    label    = "Label",
+    unit     = "Unit",
+    notes    = "Notes"
+  )
 ```
 
-| variable | label | unit | notes |
-|:---|:---|:---|:---|
-| building_permits | New residential units authorized | units | Total new residential units authorized by building permits (all structure types). Sum of single-family, 2-family, 3-to-4-family, and 5-plus-family units. Coverage: 2000-present. Geography: county (5-digit FIPS), state (2-digit FIPS), national (‘00’). |
-| units_per_1k_people | New residential units authorized per 1,000 population | units per 1,000 persons | Total new residential units authorized divided by resident population in thousands. Population denominator from Census Population Estimates Program via cori.data.pep. agg_var = population / 1,000, suitable for population-weighted averaging. Coverage: 2000-present. Geography: county (5-digit FIPS), state (2-digit FIPS), national (‘00’). |
+| Variable | Label | Unit | Notes |
+|----|----|----|----|
+| building_permits | New residential units authorized | units | Total new residential units authorized by building permits (all structure types). Sum of single-family, 2-family, 3-to-4-family, and 5-plus-family units. Coverage: 2000-present. Geography: county (5-digit FIPS), state (2-digit FIPS), national ('00'). |
+| units_per_1k_people | New residential units authorized per 1,000 population | units per 1,000 persons | Total new residential units authorized divided by resident population in thousands. Population denominator from Census Population Estimates Program via cori.data.pep. agg_var = population / 1,000, suitable for population-weighted averaging. Coverage: 2000-present. Geography: county (5-digit FIPS), state (2-digit FIPS), national ('00'). |
 
 ## Reading data
 
@@ -55,7 +61,7 @@ dplyr::glimpse(nh_bps)
 
 Housing permit activity diverges between rural and nonrural counties.
 The chart below shows population-weighted average units permitted per
-1,000 population by rural status using the CBSA 2023 rural definition.
+1,000 people by rural status using the CBSA 2023 rural definition.
 
 ``` r
 
@@ -137,7 +143,7 @@ ggplot(grafton, aes(x = year, y = value, color = group, linetype = group, linewi
   theme_cori() +
   theme(legend.position = "bottom") +
   labs(
-    title    = "New residential units authorized per 1,000 residents \u2014 Grafton County, NH",
+    title    = "Grafton County, NH\nNew residential units authorized per 1,000 residents",
     subtitle = "Compared to New Hampshire and the United States, 2000\u20132024",
     x        = NULL,
     y        = NULL,
